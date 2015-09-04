@@ -59,15 +59,11 @@ char *redis(UDF_INIT *initid, UDF_ARGS *args,
 
     // Create Null-terminated string
     cmdLen = args->lengths[0];
-    command = (char*)malloc(cmdLen + 1);
-    if (command) {
-        memcpy(command, args->args[0], cmdLen);
-        command[cmdLen] = '\0';
-    }
-    else {
-        *error = 1;
+    if(cmdLen==0){
+        *is_null=1;
         return result;
     }
+    command = strdup(args->args[0]);
 
     // Exec command
     rdsRply = redisCommand(rdsCon, command);
